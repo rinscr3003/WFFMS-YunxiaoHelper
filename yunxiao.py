@@ -138,11 +138,13 @@ class YunXiaoHelper(object):
             return None,"联网过程出错。"
 
 if __name__=="__main__":
+    print("STEP1:正在登录……")
     yx=YunXiaoHelper(sys.argv[1],sys.argv[2])
     cs=[]
     csflag=True
     while csflag:
         time.sleep(0.2)
+        print("STEP2:正在获取活动列表……\n若获取失败超过5秒，请停止运行再重新运行。")
         cs=yx.GetCourse()
         if cs==[]:
             print("获取活动列表失败，正在重新获取。")
@@ -156,7 +158,7 @@ if __name__=="__main__":
             print("="*24+"活动%02d"%(i)+"="*24)
             print(" "*4+"活动名：  "+csi[0])
             print(" "*4+"活动ID：  "+csi[1])
-            print(" "*4+"开始时间："+time.strftime("%02Y-%02m-%02d %02H:%02M:%02S", time.localtime(csi[2])))
+            print(" "*4+"开始时间："+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(csi[2])))
             print(" "*4+"已开始：  "+str(csi[3]))
             print(" "*4+"已结束：  "+str(csi[4]))
         print()
@@ -168,6 +170,7 @@ if __name__=="__main__":
     citflag=True
     citems=[]
     while citflag:
+        print("STEP3:正在获取课程列表……")
         citems=yx.GetCourseItems(cs[sel][1])
         if citems==[]:
             print("获取课程列表失败，正在重新获取。")
@@ -206,6 +209,7 @@ if __name__=="__main__":
         while wcflag:
             try:
                 time.sleep(0.2)
+                print("STEP4:正在选课……若持续出现严重错误，请直接关闭窗口再重新运行。")
                 jo,resText=yx.WishCourse(cs[sel][1],citems2[sel2][2])
                 if jo==None:
                     print("选课失败（"+resText+"），正在重新尝试。")

@@ -2,7 +2,7 @@
 云校平台选课小助手（WFFMS适用）  
 
 ## 依赖项
-待完善  
+`pip3 install -r requirements.txt`
 
 ## 用法
 `python3 yunxiao.py [USERNAME] [PASSWORD]`  

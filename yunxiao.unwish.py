@@ -119,7 +119,7 @@ class YunXiaoHelper(object):
         }
         r = self.session.post(funcUrl, data=postdata,allow_redirects=False,headers=wishheaders)
         #print(r.text)
-        if "Result" in r.text:
+        if "errMsg" in r.text:
             jo=J.loads(r.text)
             restext=[
                 "成功。",
@@ -132,12 +132,10 @@ class YunXiaoHelper(object):
                 "该课程只能选择连堂课！",
                 "总课时数超出了系统设置上限，无法继续选择，请退选其它课程后再试！"
             ]
-            if jo["Result"]==-1:
-                return None,"系统故障，操作失败。"
-            else:
-                return jo,restext[jo["Result"]]
+            
+            return jo,jo["errMsg"]
         else:
-            return None,"联网过程出错。"
+            return None,"退选成功。"
 
 if __name__=="__main__":
     print("STEP1:正在登录……")

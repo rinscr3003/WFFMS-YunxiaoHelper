@@ -75,6 +75,8 @@ class YunXiaoHelper(object):
                     if float(j[1])<0:
                         course_isstart=True
                     course_time=int(float(j[1]))+int(time.time())
+                    if course_time<0:
+                        course_time=0
             #print("获取到 活动名="+course_name+", 活动ID="+course_acid+", 开始TS="+str(course_time)+".")
             courses_list.append((course_name,course_acid,course_time,course_isstart,course_outdate))
         #print(courses_list)

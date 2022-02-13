@@ -121,21 +121,9 @@ class YunXiaoHelper(object):
         #print(r.text)
         if "errMsg" in r.text:
             jo=J.loads(r.text)
-            restext=[
-                "成功。",
-                "您已经选过该课程！",
-                "选课失败，超过人数上限！",
-                "该科目下只能同时选择指定门数课程，如需重选，请先退选已选课程！",
-                "本课程上课时间与已选课程上课时间冲突！",
-                "您已经选择过该课程下的教学班级！",
-                "超过该课程每天最多允许选择的节数！",
-                "该课程只能选择连堂课！",
-                "总课时数超出了系统设置上限，无法继续选择，请退选其它课程后再试！"
-            ]
-            
             return jo,jo["errMsg"]
         else:
-            return None,"退选成功。"
+            return jo,"退选成功。"
 
 if __name__=="__main__":
     print("STEP1:正在登录……")
@@ -209,15 +197,14 @@ if __name__=="__main__":
         while wcflag:
             try:
                 time.sleep(0.2)
-                print("STEP4:正在选课……若持续出现严重错误，请直接关闭窗口再重新运行。")
+                print("STEP4:正在退选课……若持续出现严重错误，请直接关闭窗口再重新运行。")
                 jo,resText=yx.WishCourse(cs[sel][1],citems2[sel2][2])
                 if jo==None:
-                    print("选课失败（"+resText+"），正在重新尝试。")
+                    print("退选课失败（"+resText+"），正在重新尝试。")
                 elif jo["Result"]!=0:
-                    print("选课失败（"+resText+"），正在重新尝试。")
+                    print("退选课失败（"+resText+"），正在重新尝试。")
                 else:
                     wcflag=False
-                    print("选课成功！当前课程有"+str(jo["Results"][0]["CurrentWishedCount"])+"人，其中男生"+str(jo["Results"][0]["CurrentWishedBoyCount"])+"人，女生"+str(jo["Results"][0]["CurrentWishedGirlCount"])+"人。")
-                    print("附加消息："+str(jo["Results"][0]["Msg"]))
+                    print("退选课成功！")
             except:
                 print("选课失败（通信失败），正在重新尝试。")

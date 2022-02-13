@@ -207,4 +207,4 @@ if __name__=="__main__":
                     wcflag=False
                     print("退选课成功！")
             except:
-                print("选课失败（通信失败），正在重新尝试。")
+                print("退选课失败（通信失败），正在重新尝试。")

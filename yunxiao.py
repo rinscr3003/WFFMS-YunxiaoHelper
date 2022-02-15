@@ -56,7 +56,7 @@ class YunXiaoHelper(object):
     def GetCourse(self):
         funcUrl="http://yunxiao.wffms.com/BaseInfos/MyActivity"
         xPath="//*[@id=\"metroaqui\"]/div"
-        res=self.session.get(funcUrl)
+        res=self.session.get(funcUrl,headers=self.headers2)
         #print(res.text)
         html = etree.HTML(res.text)
         cours=html.xpath(xPath)
@@ -91,7 +91,7 @@ class YunXiaoHelper(object):
     def GetCourseItems(self,csi):
         funcUrl="http://yunxiao.wffms.com/BaseInfos/WishPeriodCourse/Optional?ax=1&ActId="+csi
         xPath="body/div[1]/table[2]/tr/td/div[not(contains(@class,'metro-wished'))]"
-        res=self.session.get(funcUrl)
+        res=self.session.get(funcUrl,headers=self.headers2)
 #        print(res.text)
         html = etree.HTML(res.text)
         cours=html.xpath(xPath)

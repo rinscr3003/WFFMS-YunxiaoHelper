@@ -17,6 +17,12 @@ class YunXiaoHelper(object):
         "Referer":"http://account.wffms.com/partner?service=http://yunxiao.wffms.com/Portal/LayoutD/Login.aspx",
         "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0",
     }
+    headers2={
+        "Host":"yunxiao.wffms.com",
+        "Origin":"http://yunxiao.wffms.com",
+        "Referer":"http://yunxiao.wffms.com/Portal/LayoutD/Login.aspx",
+        "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0",
+    }
     # this url is for WFFMS in default
     loginUrl="http://account.wffms.com/"
     indexUrl="http://yunxiao.wffms.com/Portal/LayoutD/Default.aspx"
@@ -86,7 +92,7 @@ class YunXiaoHelper(object):
         funcUrl="http://yunxiao.wffms.com/BaseInfos/WishPeriodCourse/Optional?ax=1&ActId="+csi
         xPath="body/div[1]/table[2]/tr/td/div[not(contains(@class,'metro-wished'))]"
         res=self.session.get(funcUrl)
-        #print(res.text)
+#        print(res.text)
         html = etree.HTML(res.text)
         cours=html.xpath(xPath)
         cit_list=[]
@@ -165,7 +171,7 @@ if __name__=="__main__":
             print(" "*4+"已结束：  "+str(csi[4]))
         print()
         sel=int(input("请选择活动编号：").strip())
-        if sel in range(len(cs)) and csi[4]!=True:
+        if sel in range(len(cs)) and cs[sel][4]==False:
             csiflag=False
         else:
             print("输入有误或活动已结束，请重新选择。")

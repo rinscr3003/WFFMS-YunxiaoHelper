@@ -169,6 +169,7 @@ if __name__=="__main__":
             print(" "*4+"开始时间："+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(csi[2])))
             print(" "*4+"已开始：  "+str(csi[3]))
             print(" "*4+"已结束：  "+str(csi[4]))
+            print()
         print()
         sel=int(input("请选择活动编号：").strip())
         if sel in range(len(cs)) and cs[sel][4]==False:
@@ -177,11 +178,37 @@ if __name__=="__main__":
             print("输入有误或活动已结束，请重新选择。")
     citflag=True
     citems=[]
+    citCount=10
     while citflag:
+        if citCount<=0:
+            print("获取课程列表失败超过10次，正在返回活动列表...")
+            csiflag=True
+            sel=-1
+            while csiflag:
+                for i in range(len(cs)):
+                    csi=cs[i]
+                    print("="*24+"活动%02d"%(i)+"="*24)
+                    print(" "*4+"活动名：  "+csi[0])
+                    print(" "*4+"活动ID：  "+csi[1])
+                    print(" "*4+"开始时间："+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(csi[2])))
+                    print(" "*4+"已开始：  "+str(csi[3]))
+                    print(" "*4+"已结束：  "+str(csi[4]))
+                    print()
+                print()
+                sel=int(input("请选择活动编号：").strip())
+                if sel in range(len(cs)) and cs[sel][4]==False:
+                    csiflag=False
+                else:
+                    print("输入有误或活动已结束，请重新选择。")
+            citflag=True
+            citems=[]
+            citCount=10
+            continue
         print("STEP3:正在获取课程列表……")
         citems=yx.GetCourseItems(cs[sel][1])
         if citems==[]:
             print("获取课程列表失败，正在重新获取。")
+            citCount-=1
         else:
             citflag=False
     citsflag=True
@@ -196,6 +223,7 @@ if __name__=="__main__":
             print(" "*4+"课程名：  "+csi[0])
             print(" "*4+"信息：    "+csi[1])
             print(" "*4+"课程ID：  "+csi[2])
+            print()
         print()
         sel2str=(input("请选择课程编号，直接回车进入关键字搜索：").strip())
         if sel2str=="":
@@ -211,21 +239,60 @@ if __name__=="__main__":
             citsflag=False
         else:
             print("输入有误，请重新选择。")
-        jo=None
-        resText=""
-        wcflag=True
-        while wcflag:
-            try:
-                time.sleep(0.2)
-                print("STEP4:正在选课……若持续出现严重错误，请直接关闭窗口再重新运行。")
-                jo,resText=yx.WishCourse(cs[sel][1],citems2[sel2][2])
-                if jo==None:
-                    print("选课失败（"+resText+"），正在重新尝试。")
-                elif jo["Result"]!=0:
-                    print("选课失败（"+resText+"），正在重新尝试。")
+    jo=None
+    resText=""
+    wcflag=True
+    wcCount=20
+    while wcflag:
+        if wcCount<=0:
+            print("选课请求失败超过20次，正在返回课程列表...")
+            citsflag=True
+            sel2=-1
+            citems2=[]
+            while citsflag:
+                if citems2==[]:
+                    citems2=citems.copy()
+                for i in range(len(citems2)):
+                    csi=citems2[i]
+                    print("="*24+"课程%02d"%(i)+"="*24)
+                    print(" "*4+"课程名：  "+csi[0])
+                    print(" "*4+"信息：    "+csi[1])
+                    print(" "*4+"课程ID：  "+csi[2])
+                    print()
+                print()
+                sel2str=(input("请选择课程编号，直接回车进入关键字搜索：").strip())
+                if sel2str=="":
+                    citems2=[]
+                    keyword=input("请输入课程关键字：").strip()
+                    for i in citems:
+                        if keyword in i[0]:
+                            citems2.append(i)
+                    continue
                 else:
-                    wcflag=False
-                    print("选课成功！当前课程有"+str(jo["Results"][0]["CurrentWishedCount"])+"人，其中男生"+str(jo["Results"][0]["CurrentWishedBoyCount"])+"人，女生"+str(jo["Results"][0]["CurrentWishedGirlCount"])+"人。")
-                    print("附加消息："+str(jo["Results"][0]["Msg"]))
-            except:
-                print("选课失败（通信失败），正在重新尝试。")
+                    sel2=int(sel2str)
+                if sel2 in range(len(citems2)):
+                    citsflag=False
+                else:
+                    print("输入有误，请重新选择。")
+            jo=None
+            resText=""
+            wcflag=True
+            wcCount=20
+            continue
+        try:
+            time.sleep(0.2)
+            print("STEP4:正在选课……若持续出现严重错误，请直接关闭窗口再重新运行。")
+            jo,resText=yx.WishCourse(cs[sel][1],citems2[sel2][2])
+            if jo==None:
+                print("选课失败（"+resText+"），正在重新尝试。")
+            elif jo["Result"]!=0:
+                print("选课失败（"+resText+"），正在重新尝试。")
+            else:
+                wcflag=False
+                print("选课成功！当前课程有"+str(jo["Results"][0]["CurrentWishedCount"])+"人，其中男生"+str(jo["Results"][0]["CurrentWishedBoyCount"])+"人，女生"+str(jo["Results"][0]["CurrentWishedGirlCount"])+"人。")
+                print("附加消息："+str(jo["Results"][0]["Msg"]))
+        except KeyboardInterrupt:
+            wcflag=False
+            print("选课失败（您已终止程序运行）。")
+        except:
+            print("选课失败（通信失败），正在重新尝试。")
